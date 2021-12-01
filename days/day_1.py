@@ -17,6 +17,7 @@ def three_measurement_combine(numbers):
 
     return combined
 
+
 ###############################################################################
 def run_a(input_data):
     numbers = list_to_int(input_data)
