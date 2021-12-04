@@ -12,6 +12,7 @@ class BingoBoard:
         self.score = 0
         self.win_number = -1
 
+    # Mark a number on the board
     def mark_number(self, number):
         for row_nr, row in enumerate(self.board):
             for col_nr, cell in enumerate(row):
@@ -23,6 +24,7 @@ class BingoBoard:
         if 5 in self.columns_check or 5 in self.rows_check:
             self.is_bingo = True
 
+    # Calculate sum of all non marked numbers
     def calc_score(self):
         for row_nr, row in enumerate(self.board):
             for col_nr, cell in enumerate(row):
@@ -37,6 +39,7 @@ class BingoBoard:
         return result
 
 
+# Obtain first winning bingo board
 def first_bingo(numbers, boards):
     for number in numbers:
         for board in boards:
@@ -47,6 +50,7 @@ def first_bingo(numbers, boards):
                 return board
 
 
+# Obtain last winning bingo board
 def last_bingo(numbers, boards):
     last_winner = None
     for number in numbers:
