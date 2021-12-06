@@ -1,47 +1,25 @@
 from re import findall
 
-class Fish:
-    TIMER_START = 6
-    TIMER_NEW = 8
+def spawn(days, memo):
+    if memo.get(days, None) is not None:
+        return memo[days]
 
-    def __init__(self, timer):
-        self.timer = timer
+    total_spawned = 1
+    for i in range(0, days, 7):
+        total_spawned += spawn(days - i - 9, memo)
 
-    def lapse(self, time):
-        new_fish = None
-        self.timer -= 1
-        if self.timer == -1:
-            new_fish = Fish(self.TIMER_NEW)
-            self.timer = self.TIMER_START
-
-        return new_fish
-
-    def __repr__(self):
-        return str(self.timer)
-
-    def __str__(self):
-        return self.__repr__()
-
-
-def build_fish(data):
-    fishes = [Fish(int(timer)) for timer in findall(r'(\d+)', data[0])]
-
-    for i in range(80):
-        new_fishes = []
-        for fish in fishes:
-            new_fish = fish.lapse(1)
-            if new_fish:
-                new_fishes.append(new_fish)
-        fishes += new_fishes
-
-    return fishes
+    memo[days] = total_spawned
+    return total_spawned
 
 
 ###############################################################################
 def run_a(input_data):
-    fishes = build_fish(input_data)
-    return len(fishes)
+    memo = {0: 1}
+    fishes = sum([spawn(80 - int(delay), memo) for delay in findall(r'(\d+)', input_data[0])])
+    return fishes
 
 
 def run_b(input_data):
-    return ""
+    memo = {}
+    fishes = sum([spawn(256 - int(delay), memo) for delay in findall(r'(\d+)', input_data[0])])
+    return fishes
