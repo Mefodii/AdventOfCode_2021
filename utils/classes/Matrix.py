@@ -14,6 +14,9 @@ class Adjacent:
         self.y = y
         self.cell_value = cell_value
 
+    def __repr__(self):
+        return f"{self.direction} {self.x} {self.y} {self.cell_value}"
+
 
 class Matrix:
 
@@ -27,13 +30,13 @@ class Matrix:
         adjacent = [Adjacent(Adjacent.UP, x, y - 1, self.get_cell_or_none(x, y - 1)),
                     Adjacent(Adjacent.DOWN, x, y + 1, self.get_cell_or_none(x, y + 1)),
                     Adjacent(Adjacent.LEFT, x - 1, y, self.get_cell_or_none(x - 1, y)),
-                    Adjacent(Adjacent.RIGHT, x + 1, y - 1, self.get_cell_or_none(x + 1, y))]
+                    Adjacent(Adjacent.RIGHT, x + 1, y, self.get_cell_or_none(x + 1, y))]
 
         if diagonal:
             adjacent.append(Adjacent(Adjacent.UP_RIGHT, x + 1, y - 1, self.get_cell_or_none(x + 1, y - 1)))
             adjacent.append(Adjacent(Adjacent.UP_LEFT, x - 1, y - 1, self.get_cell_or_none(x - 1, y - 1)))
-            adjacent.append(Adjacent(Adjacent.DOWN_RIGHT, x + 1, y - 1, self.get_cell_or_none(x + 1, y - 1)))
-            adjacent.append(Adjacent(Adjacent.DOWN_LEFT, x - 1, y - 1, self.get_cell_or_none(x - 1, y - 1)))
+            adjacent.append(Adjacent(Adjacent.DOWN_RIGHT, x + 1, y + 1, self.get_cell_or_none(x + 1, y + 1)))
+            adjacent.append(Adjacent(Adjacent.DOWN_LEFT, x - 1, y + 1, self.get_cell_or_none(x - 1, y + 1)))
 
         return adjacent
 
