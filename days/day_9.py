@@ -47,7 +47,6 @@ class Matrix(MatrixTemplate):
         for mask_row in basin_mask.matrix:
             basin_size += sum(mask_row)
 
-        print(repr(basin_mask))
         return basin_size
 
     def build_basin_cells(self, x, y, basin_mask):
@@ -85,5 +84,10 @@ def run_b(input_data):
     matrix = init_matrix(input_data)
     matrix.find_low_points()
     matrix.calc_basins()
-    print(matrix.basins)
-    return ""
+
+    basins_size = sorted([basin[Matrix.BASIN_SIZE] for basin in matrix.basins])
+    result = 1
+
+    for size in basins_size[-3:]:
+        result *= size
+    return result
