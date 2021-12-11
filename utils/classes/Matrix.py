@@ -40,6 +40,9 @@ class Matrix:
 
         return adjacent
 
+    def get_cell(self, x, y):
+        return self.matrix[y][x]
+
     def get_cell_or_none(self, x, y):
         if x >= self.width or x < 0:
             return None
@@ -47,6 +50,9 @@ class Matrix:
             return None
 
         return self.matrix[y][x]
+
+    def set_cell(self, x, y, value):
+        self.matrix[y][x] = value
 
     def map_row(self, y, row_data):
         for i in range(len(row_data)):
