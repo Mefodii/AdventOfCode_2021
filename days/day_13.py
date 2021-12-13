@@ -40,15 +40,25 @@ class Sheet(MatrixTemp):
             self.fold_horizontal(fold.along)
 
     def fold_vertical(self, along_x):
-        columns = [self.get_column(x) for x in range(along_x + 1, self.width)]
-        for x, column in enumerate(columns[::-1]):
-            for y, dot in enumerate(column):
-                if dot:
-                    self.set_cell(x, y, dot)
+        right_columns = [self.get_column(x) for x in range(along_x + 1, self.width)][::-1]
+        left_columns = [self.get_column(x) for x in range(along_x)]
 
-        self.width = along_x
+        right_len = len(right_columns)
+        left_len = len(left_columns)
+        new_width = max(right_len, left_len)
+        for x in range(new_width):
+            for y in range(self.height):
+                left_x = left_len - new_width + x
+                right_x = right_len - new_width + x
+                left_cell = left_columns[left_x][y] if left_x >= 0 else False
+                right_cell = right_columns[right_x][y] if right_x >= 0 else False
+
+                dot = left_cell or right_cell
+                self.set_cell(x, y, dot)
+
+        self.width = new_width
         for y, row in enumerate(self.matrix):
-            self.matrix[y] = row[:self.width]
+            self.matrix[y] = row[:new_width]
 
     def fold_horizontal(self, along_y):
         rows = self.matrix[along_y + 1:]
@@ -63,7 +73,7 @@ class Sheet(MatrixTemp):
     def __repr__(self):
         result = ""
         for row in self.matrix:
-            result += "".join(["#" if cell else "." for cell in row]) + "\n"
+            result += "".join(["#" if cell else " " for cell in row]) + "\n"
         return result
 
 
@@ -121,4 +131,11 @@ def run_a(input_data):
 
 
 def run_b(input_data):
-    return ""
+    sheet_data, folds_data = parse_data(input_data)
+    sheet = init_sheet(sheet_data)
+    folds = init_folds(folds_data)
+
+    for fold in folds:
+        sheet.fold(fold)
+
+    return sheet.__repr__()
