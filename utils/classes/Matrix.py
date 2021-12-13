@@ -40,6 +40,12 @@ class Matrix:
 
         return adjacent
 
+    def get_row(self, y):
+        return self.matrix[y]
+
+    def get_column(self, x):
+        return [row[x] for row in self.matrix]
+
     def get_cell(self, x, y):
         return self.matrix[y][x]
 
