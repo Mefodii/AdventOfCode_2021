@@ -14,8 +14,10 @@ class Polymer:
 
     def process(self, steps):
         for step in range(steps):
+            print(step)
             half = floor(len(self.polymer)/2)
-            self.polymer = self.insert(self.polymer[:half], self.polymer[half:])
+            new_insertion = self.insert(self.polymer[:half], self.polymer[half:])
+            self.polymer = new_insertion
             # new_polymer = self.polymer[0]
             # for i, c2 in enumerate(self.polymer[1:]):
             #     c1 = self.polymer[i]
@@ -30,15 +32,15 @@ class Polymer:
             mid_insertion = self.insertions[left[-1] + right[0]]
 
             left_half = floor(len(left) / 2)
-            left_insertion = self.insert(left[:left_half], left[left_half:])
+            left_insertion = self.insert(left[:left_half], left[left_half:]) if len(left) >= 2 else left
 
             right_half = floor(len(right) / 2)
-            right_insertion = self.insert(right[:right_half], right[right_half:])
+            right_insertion = self.insert(right[:right_half], right[right_half:]) if len(right) >= 2 else right
 
             new_insertion = left_insertion[1:] + mid_insertion + right_insertion[:-1]
             self.insertions[left + right] = new_insertion
 
-        return left[0] + self.insertions[left + right] + right[0]
+        return left[0] + self.insertions[left + right] + right[-1]
 
 
 def build_insertions(data):
@@ -68,7 +70,6 @@ def run_a(input_data):
     insertions = build_insertions(input_data[2:])
     polymer = Polymer(template, insertions)
     polymer.process(10)
-    print(polymer.polymer)
     result = get_min_max_diff(polymer)
     return result
 
