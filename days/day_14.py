@@ -1,67 +1,33 @@
 from collections import Counter
-from math import floor
 
 
 class Polymer:
 
     def __init__(self, template, insertions):
         self.template = template
-        self.polymer = template
         self.insertions = insertions
-
-    def __repr__(self):
-        return f"{self.polymer} {self.insertions}"
+        self.pairs = Counter(map(str.__add__, template, template[1:]))
+        self.count = Counter(template)
 
     def process(self, steps):
         for step in range(steps):
-            print(step)
-            half = floor(len(self.polymer)/2)
-            new_insertion = self.insert(self.polymer[:half], self.polymer[half:])
-            self.polymer = new_insertion
-            # new_polymer = self.polymer[0]
-            # for i, c2 in enumerate(self.polymer[1:]):
-            #     c1 = self.polymer[i]
-            #     new_c = self.insertions.get(c1 + c2, "")
-            #     new_polymer += new_c + c2
+            new_pairs = self.pairs.copy()
+            for (a, b), count in self.pairs.items():
+                c = self.insertions[a + b]
+                new_pairs[a + c] += count
+                new_pairs[c + b] += count
+                new_pairs[a + b] -= count
+                self.count[c] += count
 
-            # self.polymer = new_polymer
-
-    def insert(self, left, right):
-        insertion = self.insertions.get(left + right, None)
-        if not insertion:
-            mid_insertion = self.insertions[left[-1] + right[0]]
-
-            left_half = floor(len(left) / 2)
-            left_insertion = self.insert(left[:left_half], left[left_half:]) if len(left) >= 2 else left
-
-            right_half = floor(len(right) / 2)
-            right_insertion = self.insert(right[:right_half], right[right_half:]) if len(right) >= 2 else right
-
-            new_insertion = left_insertion[1:] + mid_insertion + right_insertion[:-1]
-            self.insertions[left + right] = new_insertion
-
-        return left[0] + self.insertions[left + right] + right[-1]
+            self.pairs = new_pairs
 
 
 def build_insertions(data):
-    insertions = {}
-    for line in data:
-        pair, elem = line.split(" -> ")
-        insertions[pair] = elem
-
-    return insertions
+    return dict(line.split(" -> ") for line in data)
 
 
-def get_min_max_diff(polymer):
-    counter = Counter(polymer.polymer)
-    min_c = 99999999999999999
-    max_c = 0
-
-    for count in counter.values():
-        min_c = min(min_c, count)
-        max_c = max(max_c, count)
-
-    return max_c - min_c
+def get_min_max_diff(counter):
+    return max(counter.values()) - min(counter.values())
 
 
 ###############################################################################
@@ -70,7 +36,7 @@ def run_a(input_data):
     insertions = build_insertions(input_data[2:])
     polymer = Polymer(template, insertions)
     polymer.process(10)
-    result = get_min_max_diff(polymer)
+    result = get_min_max_diff(polymer.count)
     return result
 
 
@@ -78,6 +44,6 @@ def run_b(input_data):
     template = input_data[0]
     insertions = build_insertions(input_data[2:])
     polymer = Polymer(template, insertions)
-    # polymer.process(40)
-    result = get_min_max_diff(polymer)
+    polymer.process(40)
+    result = get_min_max_diff(polymer.count)
     return result
