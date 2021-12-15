@@ -1,7 +1,5 @@
 from utils.classes.Matrix import Matrix
 
-MAX_INT = 99999999999999999999999999
-
 
 class Cave(Matrix):
 
@@ -10,8 +8,8 @@ class Cave(Matrix):
         self.costs = Matrix(width=self.width, height=self.height, init_value=None)
 
     def calc_travel_costs(self):
-        for y in range(1, self.height):
-            for x in range(1, self.width):
+        for y in range(0, self.height):
+            for x in range(0, self.width):
                 self.costs.set_cell(x, y, self.min_cost(x, y))
 
     def min_cost(self, x, y):
@@ -43,8 +41,8 @@ def init_cave(data):
 def run_a(input_data):
     cave = init_cave(input_data)
     cave.calc_travel_costs()
-    print(cave.costs)
-    return ""
+    last_point_cost = cave.costs.get_cell(cave.width - 1, cave.height - 1) - cave.get_cell(0, 0)
+    return last_point_cost
 
 
 def run_b(input_data):
